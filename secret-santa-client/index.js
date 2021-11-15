@@ -22,7 +22,7 @@ client.on('connect', function(connection) {
     function sendNumber() {
         if (connection.connected) {
             var number = Math.round(Math.random() * 0xFFFFFF);
-            connection.sendUTF(number.toString());
+            connection.send(number.toString());
             setTimeout(sendNumber, 1000);
         }
     }
@@ -34,5 +34,4 @@ client.connect(
     'secret-santa-protocol',
     'localhost',
     {},
-    {}
 );
