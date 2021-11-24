@@ -1,25 +1,13 @@
-import { createServer } from "http";
-import { Server, Socket } from "socket.io";
-import RoomsManager from "./helpers/RoomsManager";
+import {handleConnection} from "./handlers/HandleConnection";
+import {io, httpServer} from "./IO";
 
-const httpServer = createServer();
-const io = new Server(httpServer);
+declare module 'socket.io' {
+    interface Socket {
+        nick: string;
+    }
+}
 
-io.on("connection", (socket: Socket) => {
-
-    const roomToJoin: string | string[] | undefined = socket.handshake.query.room;
-    const existingRooms = io.sockets.adapter.rooms;
-
-    const room: string = RoomsManager.fetchRoom(roomToJoin, existingRooms);
-
-    socket.join(room);
-
-    io.to(room).emit('user-joined')
-
-    socket.on('evaluation', () => {
-        io.to(room).emit('evaluation');
-    })
-
-});
+io.on("connection", handleConnection);
 
 httpServer.listen(3000);
+console.log('server listening on port 3000');

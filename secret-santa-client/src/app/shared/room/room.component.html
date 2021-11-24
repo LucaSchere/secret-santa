@@ -1,0 +1,5 @@
+<span id="room">{{ this.wss?.room }}</span>
+
+<ul>
+  <li *ngFor="let client of this.wss?.clients">{{ client }}</li>
+</ul>
