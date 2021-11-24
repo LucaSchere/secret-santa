@@ -13,15 +13,26 @@ export const handleConnection = (socket: Socket) => {
 
     respond(room);
 
-    console.log(io.sockets.adapter.rooms);
-
-    io.on('disconnect', (args) => {
+    socket.on('disconnect', () => {
             io.to(room).emit('user:left', {
                 room,
                 clients: namesOf(room),
             });
         }
     )
+
+    socket.on('draw', (params) => {
+        if (params.socketId === socket.id && io.sockets.adapter.rooms.has(params.room)) {
+
+            const room = io.sockets.adapter.rooms.get(params.room);
+            const firstSocket = room?.values().next().value;
+
+            if (firstSocket === params.socketId) {
+                // Todo
+            }
+
+        }
+    });
 }
 
 const respond = (room: string) => {

@@ -26,5 +26,10 @@ export class RoomComponent implements OnDestroy, ComponentCanDeactivate {
   ngOnDestroy(): void {
     this.wss.disconnect();
   }
+
+  draw(): void {
+    this.wss.draw();
+  }
+
 }
 

@@ -8,17 +8,14 @@ import {ServerEvents, ClientEvents} from "../config/events";
 export class WebsocketService {
 
   public clients: any;
-  public room: string;
+  public room: string = '';
+  private nick: string = '';
   private socket: Socket<ServerEvents, ClientEvents> | undefined;
-  private readonly nick: string;
-
-  constructor() {
-    this.room = history.state.room;
-    this.nick = history.state.nick;
-  }
 
   public connect = () => {
-    console.log('connect');
+    this.room = history.state.room;
+    this.nick = history.state.nick;
+
     this.socket = io('http://localhost:3000',
       {
         query: {
@@ -31,22 +28,23 @@ export class WebsocketService {
   }
 
   public disconnect = () => {
-    console.log('disconnect');
-
     this.socket?.disconnect();
+  }
+
+  public draw() {
+    this.socket?.emit('draw', {
+      socketId: this.socket.id,
+      room: this.room,
+    });
   }
 
   private listen = () => {
     this.socket?.on('user:joined', (params) => {
-      console.log('joined');
-
       this.room = params.room;
       this.clients = params.clients;
     });
 
     this.socket?.on('user:left', (params) => {
-      console.log('disconnect');
-
       this.room = params.room;
       this.clients = params.clients;
     })

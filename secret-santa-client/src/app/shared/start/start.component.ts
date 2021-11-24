@@ -15,7 +15,10 @@ export class StartComponent implements OnInit {
   room: string =  '';
 
   goToRoom = () => {
-    this.router.navigate(['/room'], {state: {room: this.room, nick: this.nick}});
+
+    const extras = {state: {room: this.room, nick: this.nick}};
+
+    this.router.navigate(['/room'], extras);
   }
 
   ngOnInit(): void {
